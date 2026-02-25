@@ -1,0 +1,213 @@
+{
+  "description": "Exemple de réponse complète du pipeline SmartTicket V3.0",
+  "endpoint": "GET /smartticket/full-analysis?url=...",
+  "version": "3.0.0",
+
+  "example_rejected": {
+    "ticketId": "TEST-001",
+    "timestamp": "2026-02-10T12:00:00.000Z",
+    "status": "rejected",
+    "message": "🔴 Désolé, je ne peux pas traiter ce ticket. Il manque des informations essentielles (description précise ou étapes de reproduction).",
+    "completeness": {
+      "completenessScore": 35,
+      "level": "Rejected",
+      "decision": "Rejected",
+      "message": "🔴 Désolé, je ne peux pas traiter ce ticket. Il manque des informations essentielles (description précise ou étapes de reproduction).",
+      "missingElements": [
+        "Description claire",
+        "Étapes de reproduction",
+        "Environnement",
+        "Comportement attendu / Message d'erreur",
+        "Preuve (capture d'écran)"
+      ],
+      "detectedElements": [
+        "Description partielle"
+      ]
+    },
+    "pipeline": {
+      "step1_completeness": "✅ Exécuté",
+      "step2_summary": "❌ Non exécuté (ticket rejeté)",
+      "step3_difficulty": "❌ Non exécuté (ticket rejeté)",
+      "step4_similarity": "❌ Non exécuté (ticket rejeté)"
+    }
+  },
+
+  "example_incomplete": {
+    "ticketId": "TEST-002",
+    "timestamp": "2026-02-10T12:00:00.000Z",
+    "status": "incomplete",
+    "completeness": {
+      "completenessScore": 65,
+      "level": "Incomplete",
+      "decision": "Accepted-Incomplete",
+      "message": "🟠 Ticket transmis, mais il manque des éléments tels qu'une capture d'écran ou l'environnement. Cela aiderait le support.",
+      "missingElements": [
+        "Environnement",
+        "Preuve (capture d'écran)"
+      ],
+      "detectedElements": [
+        "Description claire",
+        "Comportement attendu"
+      ]
+    },
+    "summary": "**Ticket #TEST-002** : Erreur calcul absence multi-contrats\n**Module** : Absence\n**Problème** : Le calcul des absences ne fonctionne pas correctement pour les salariés ayant plusieurs contrats simultanés.\n**Impact** : Important - Traitement rapide souhaité\n**Contexte** : 1 échange(s), Ouvert depuis 2 jours",
+    "difficulty": {
+      "difficultyScore": 3,
+      "difficultyLevel": "Moyenne",
+      "risks": [
+        "Cross-module (2 modules impactés)",
+        "Impact multi-clients"
+      ],
+      "modules": [
+        "Absence",
+        "Planning"
+      ],
+      "scoreDetails": [
+        {
+          "criterion": "Modules impactés",
+          "value": 2,
+          "impact": 1,
+          "description": "2 modules détectés"
+        },
+        {
+          "criterion": "Description longue",
+          "value": 450,
+          "impact": 2,
+          "description": "450 caractères"
+        },
+        {
+          "criterion": "Priorité haute",
+          "value": "high",
+          "impact": 1,
+          "description": "Traitement rapide souhaité"
+        }
+      ],
+      "recommendation": "Demander un scénario de reproduction détaillé au client. Vérifier la cohérence Absence/Planning. Tester une paie de contrôle pour valider la cohérence."
+    },
+    "similarTickets": [
+      {
+        "id": "111525",
+        "title": "Incohérence calcul absence multi-contrats",
+        "category": "Absence",
+        "similarity": 0.85
+      },
+      {
+        "id": "112020",
+        "title": "Incohérence calcul absence pour multi-contrats",
+        "category": "Absence",
+        "similarity": 0.82
+      },
+      {
+        "id": "110452",
+        "title": "Erreur calcul planning après modification absence",
+        "category": "Planning",
+        "similarity": 0.67
+      }
+    ],
+    "pipeline": {
+      "step1_completeness": "✅ Score: 65/100 (Accepted-Incomplete)",
+      "step2_summary": "✅ Résumé généré (5 lignes)",
+      "step3_difficulty": "✅ Score: 3/5 (Moyenne)",
+      "step4_similarity": "✅ 3 tickets similaires trouvés"
+    }
+  },
+
+  "example_complete": {
+    "ticketId": "TEST-003",
+    "timestamp": "2026-02-10T12:00:00.000Z",
+    "status": "complete",
+    "completeness": {
+      "completenessScore": 95,
+      "level": "Complete",
+      "decision": "Accepted-Complete",
+      "message": "🟢 Ticket complet. Analyse avancée en cours.",
+      "missingElements": [],
+      "detectedElements": [
+        "Description claire",
+        "Étapes de reproduction",
+        "Environnement",
+        "Comportement attendu",
+        "Preuve (capture)"
+      ]
+    },
+    "summary": "**Ticket #TEST-003** : Incohérence calcul absence multi-contrats en production\n**Module** : Absence\n**Problème** : **Environnement** : Production\n\n**Problème** : Le calcul des absences ne fonctionne pas correctement pour les salariés ayant plusieurs contrats simultanés.\n**Impact** : Critique - Traitement urgent\n**Contexte** : 3 échange(s), Ouvert depuis 5 jours",
+    "difficulty": {
+      "difficultyScore": 4,
+      "difficultyLevel": "Élevée",
+      "risks": [
+        "Cross-module (2 modules impactés)",
+        "Impact multi-clients",
+        "Impact financier",
+        "Nombreux échanges (ticket complexe)"
+      ],
+      "modules": [
+        "Absence",
+        "Planning",
+        "Paie"
+      ],
+      "scoreDetails": [
+        {
+          "criterion": "Modules impactés",
+          "value": 2,
+          "impact": 1,
+          "description": "2 modules détectés"
+        },
+        {
+          "criterion": "Description longue",
+          "value": 1500,
+          "impact": 2,
+          "description": "1500 caractères"
+        },
+        {
+          "criterion": "Commentaires multiples",
+          "value": 3,
+          "impact": 1,
+          "description": "3 échanges"
+        },
+        {
+          "criterion": "Priorité urgente",
+          "value": "urgent",
+          "impact": 2,
+          "description": "Traitement prioritaire requis"
+        }
+      ],
+      "recommendation": "⚠️ URGENT : Traiter en priorité absolue. Vérifier la cohérence Absence/Planning/Paie. Tester une paie de contrôle pour valider la cohérence. ⚠️ Contacter l'expert paie et vérifier l'impact financier."
+    },
+    "similarTickets": [
+      {
+        "id": "111525",
+        "title": "Incohérence calcul absence multi-contrats",
+        "category": "Absence",
+        "similarity": 0.92
+      },
+      {
+        "id": "112020",
+        "title": "Incohérence calcul absence pour multi-contrats",
+        "category": "Absence",
+        "similarity": 0.88
+      },
+      {
+        "id": "105432",
+        "title": "Absence non prise en compte dans le calcul paie",
+        "category": "Absence",
+        "similarity": 0.71
+      }
+    ],
+    "pipeline": {
+      "step1_completeness": "✅ Score: 95/100 (Accepted-Complete)",
+      "step2_summary": "✅ Résumé généré (5 lignes)",
+      "step3_difficulty": "✅ Score: 4/5 (Élevée)",
+      "step4_similarity": "✅ 3 tickets similaires trouvés"
+    }
+  },
+
+  "notes": {
+    "pipeline_execution": "Les 4 étapes sont exécutées dans l'ordre strict. Si l'étape 1 rejette le ticket, les étapes 2-4 ne sont pas exécutées.",
+    "completeness_thresholds": {
+      "0-54": "🔴 Rejected - Pipeline arrêté",
+      "55-79": "🟠 Accepted-Incomplete - Pipeline continue",
+      "80-100": "🟢 Accepted-Complete - Pipeline continue"
+    },
+    "similarity_algorithm": "Score calculé sur 3 critères : catégorie (30%), mots-clés (50%), titre (20%). Retourne les 3 meilleurs matches avec score > 0.3"
+  }
+}

@@ -1,0 +1,363 @@
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  background: #f5f7fa;
+  width: 420px;
+  min-height: 500px;
+}
+
+/* Container */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status {
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading p {
+  margin-top: 16px;
+  color: #666;
+  font-size: 13px;
+}
+
+/* Error State */
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.error p {
+  color: #e53e3e;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.btn-retry {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-retry:hover {
+  background: #5568d3;
+}
+
+/* Content */
+.content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Ticket Header */
+.ticket-header {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+
+.ticket-id {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #667eea;
+  background: #eef2ff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.ticket-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+  line-height: 1.4;
+}
+
+/* Section */
+.section {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+}
+
+.section h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Difficulty Badge */
+.difficulty-badge-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.difficulty-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Difficulty Levels Colors */
+.difficulty-badge.low {
+  background: #d4edda;
+  color: #155724;
+}
+
+.difficulty-badge.medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.difficulty-badge.high {
+  background: #ffe5d0;
+  color: #c05621;
+}
+
+.difficulty-badge.very-high {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.difficulty-badge.critical {
+  background: #fbd5d5;
+  color: #742a2a;
+}
+
+.difficulty-score {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+/* Difficulty Bar (5 segments) */
+.difficulty-bar {
+  display: flex;
+  gap: 4px;
+  height: 8px;
+}
+
+.difficulty-bar .segment {
+  flex: 1;
+  background: #e2e8f0;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.difficulty-bar .segment.filled.low {
+  background: #48bb78;
+}
+
+.difficulty-bar .segment.filled.medium {
+  background: #f6c140;
+}
+
+.difficulty-bar .segment.filled.high {
+  background: #ed8936;
+}
+
+.difficulty-bar .segment.filled.very-high {
+  background: #f56565;
+}
+
+.difficulty-bar .segment.filled.critical {
+  background: #c53030;
+}
+
+/* Modules List */
+.modules-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.module-tag {
+  background: #eef2ff;
+  color: #5a67d8;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e0;
+}
+
+/* Risks List */
+.risks-list {
+  list-style: none;
+  padding: 0;
+}
+
+.risks-list li {
+  padding: 8px 0;
+  padding-left: 20px;
+  position: relative;
+  color: #4a5568;
+  font-size: 13px;
+  border-bottom: 1px solid #f7fafc;
+}
+
+.risks-list li:last-child {
+  border-bottom: none;
+}
+
+.risks-list li::before {
+  content: '•';
+  position: absolute;
+  left: 6px;
+  color: #f56565;
+  font-weight: bold;
+}
+
+/* Summary */
+.summary {
+  background: #f7fafc;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #2d3748;
+  border-left: 3px solid #667eea;
+}
+
+/* No Data */
+.no-data {
+  color: #a0aec0;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* Metadata */
+.metadata {
+  background: #f7fafc;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  margin-top: 16px;
+}
+
+.metadata-item {
+  display: flex;
+  gap: 6px;
+}
+
+.metadata-item .label {
+  color: #718096;
+  font-weight: 500;
+}
+
+.metadata-item .value {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}

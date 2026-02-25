@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartContext Doc</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- En-tête -->
+    <header class="header">
+      <h1 class="title">📚 SmartContext Doc</h1>
+      <div class="url-display" id="currentUrl">Chargement...</div>
+    </header>
+
+    <!-- État de connexion serveur -->
+    <div class="server-status" id="serverStatus">
+      <span class="status-indicator" id="statusIndicator"></span>
+      <span id="statusText">Vérification serveur...</span>
+    </div>
+
+    <!-- Section principale : Documentation trouvée -->
+    <section class="section" id="docSection">
+      <h2 class="section-title">📖 Documentation</h2>
+      <div id="docContent">
+        <div class="loader">Recherche de documentation...</div>
+      </div>
+      <!-- Bouton pour forcer l'aide IA même si doc existe -->
+      <div class="ai-boost-container" style="display: none;" id="aiBoostContainer">
+        <button class="btn-ai-boost" id="btnAIBoost">
+          🤖 Toujours afficher une aide IA intelligente
+        </button>
+      </div>
+    </section>
+
+    <!-- Section : Complétude du ticket (NOUVEAU - EN PREMIER) -->
+    <section id="completenessSection" class="section" style="display:none;">
+      <h2 class="section-title">🟩 Complétude du ticket</h2>
+
+      <div id="completenessBadge" class="badge"></div>
+
+      <p id="completenessMessage" class="completeness-message"></p>
+
+      <ul id="missingElementsList" class="missing-list"></ul>
+
+      <div id="completenessScoreDetails" class="score-details"></div>
+    </section>
+
+    <!-- Section : Résumé IA -->
+    <section class="section" id="summarySection" style="display: none;">
+      <h2 class="section-title">🤖 Résumé IA</h2>
+      <div id="summaryContent" class="ai-content">
+        <div class="loader">Chargement du résumé...</div>
+      </div>
+    </section>
+
+    <!-- Section : Checklist -->
+    <section class="section" id="checklistSection" style="display: none;">
+      <h2 class="section-title">✅ Checklist</h2>
+      <ul id="checklistContent" class="checklist">
+        <li class="loader">Chargement...</li>
+      </ul>
+    </section>
+
+    <!-- Section Erreurs fréquentes : SUPPRIMÉE -->
+    <!-- Section FAQ : SUPPRIMÉE -->
+
+    <!-- Section : SmartTicket - Difficulté du ticket -->
+    <section class="section" id="difficultySection" style="display: none;">
+      <h2 class="section-title">🔥 Difficulté du ticket</h2>
+
+      <!-- Badge de difficulté -->
+      <div class="difficulty-header">
+        <div class="difficulty-badge" id="difficultyBadge">
+          <span id="difficultyText">Difficulté : Chargement...</span>
+        </div>
+        <div class="difficulty-score-display" id="difficultyScoreDisplay">—</div>
+      </div>
+
+      <!-- Barre de difficulté (5 segments) -->
+      <div class="difficulty-bar">
+        <div class="segment" data-segment="1"></div>
+        <div class="segment" data-segment="2"></div>
+        <div class="segment" data-segment="3"></div>
+        <div class="segment" data-segment="4"></div>
+        <div class="segment" data-segment="5"></div>
+      </div>
+
+      <!-- Détails du score -->
+      <div class="difficulty-subsection" id="scoreDetailsSection" style="display: none;">
+        <h3 class="subsection-title">📊 Détails du score</h3>
+        <ul class="score-details-list" id="scoreDetailsList">
+          <li class="loader">Chargement...</li>
+        </ul>
+      </div>
+
+      <!-- Modules impactés -->
+      <div class="difficulty-subsection">
+        <h3 class="subsection-title">🔧 Modules impactés</h3>
+        <div class="modules-list" id="modulesList">
+          <span class="loader">Chargement...</span>
+        </div>
+      </div>
+
+      <!-- Risques détectés -->
+      <div class="difficulty-subsection">
+        <h3 class="subsection-title">⚠️ Risques détectés</h3>
+        <ul class="risks-list" id="risksList">
+          <li class="loader">Chargement...</li>
+        </ul>
+      </div>
+
+      <!-- Recommandation (NOUVEAU) -->
+      <div class="difficulty-subsection" id="recommendationSection" style="display: none;">
+        <h3 class="subsection-title">💡 Recommandation</h3>
+        <div class="recommendation-box" id="recommendationBox">
+          <p class="loader">Chargement...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section : Tickets similaires (NOUVEAU - EN DERNIER) -->
+    <section id="similarSection" class="section" style="display:none;">
+      <h2 class="section-title">🔍 Tickets similaires</h2>
+      <ul id="similarTicketsList"></ul>
+    </section>
+
+    <!-- Section : Documentation IA générée automatiquement -->
+    <section class="section ai-auto-section" id="aiAutoSection" style="display: none;">
+      <h2 class="section-title">🤖 Documentation IA générée pour cette page</h2>
+      <div class="ai-auto-message">
+        <p>Aucune documentation prédéfinie trouvée. Génération automatique d'une aide contextuelle...</p>
+      </div>
+      <div class="loader" id="aiAutoLoader" style="display: block;">Analyse de la page en cours...</div>
+    </section>
+
+    <!-- Section : Aucune doc trouvée -->
+    <section class="section no-doc-section" id="noDocSection" style="display: none;">
+      <div class="no-doc-message">
+        <p>🔍 Aucune documentation trouvée pour cette page.</p>
+        <button class="btn-generate-ai" id="btnGenerateAI">🤖 Générer une aide IA pour cette page</button>
+        <button class="btn-report" id="btnReport">Signaler une documentation manquante</button>
+      </div>
+    </section>
+
+    <!-- Pied de page -->
+    <footer class="footer">
+      <div class="footer-links">
+        <button class="link-btn" id="btnRefresh">🔄 Actualiser</button>
+        <button class="link-btn" id="btnSettings">⚙️ Paramètres</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Bibliothèques externes -->
+  <script src="lib/jspdf.umd.min.js"></script>
+  <!-- DÉSACTIVÉ : XLSX.js -->
+  <!-- <script src="lib/xlsx.full.min.js"></script> -->
+
+  <!-- DÉSACTIVÉ : Modules vectoriels -->
+  <!-- <script type="module" src="js/excel-loader.js"></script> -->
+  <!-- <script type="module" src="js/vector-db.js"></script> -->
+
+  <!-- Script principal -->
+  <script src="popup.js"></script>
+</body>
+</html>

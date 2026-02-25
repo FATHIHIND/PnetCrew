@@ -1,0 +1,30 @@
+{
+  "name": "smartcontext-doc",
+  "version": "1.0.0",
+  "description": "Extension Chrome intelligente pour afficher de la documentation contextuelle avec Azure AI",
+  "scripts": {
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "sync": "cd server && npm run sync-mapping",
+    "test:summarize": "cd server && npm run summarize:sample",
+    "install:all": "cd server && npm install"
+  },
+  "keywords": [
+    "chrome-extension",
+    "documentation",
+    "azure-ai",
+    "openai",
+    "n8n",
+    "contextual-help"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/votre-repo/smartcontext-doc"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

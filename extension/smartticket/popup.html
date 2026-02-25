@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartTicket - Analyse</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🎟️ SmartTicket</h1>
+      <div id="status" class="status">Chargement...</div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Récupération des données...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="error hidden">
+      <div class="error-icon">⚠️</div>
+      <p id="error-message"></p>
+      <button id="retry-btn" class="btn-retry">Réessayer</button>
+    </div>
+
+    <!-- Content -->
+    <div id="content" class="content hidden">
+      <!-- Ticket Info -->
+      <div class="ticket-header">
+        <div class="ticket-id" id="ticketId">—</div>
+        <h2 class="ticket-title" id="ticketTitle">—</h2>
+      </div>
+
+      <!-- Difficulty Section -->
+      <div class="section">
+        <h3>📊 Difficulté</h3>
+        <div class="difficulty-badge-wrapper">
+          <span class="difficulty-badge" id="difficultyBadge">—</span>
+          <span class="difficulty-score" id="difficultyScore">—</span>
+        </div>
+        <div class="difficulty-bar" id="difficultyBar">
+          <div class="segment"></div>
+          <div class="segment"></div>
+          <div class="segment"></div>
+          <div class="segment"></div>
+          <div class="segment"></div>
+        </div>
+      </div>
+
+      <!-- Modules Impactés -->
+      <div class="section">
+        <h3>🔧 Modules Impactés</h3>
+        <div class="modules-list" id="modulesList">
+          <span class="no-data">Aucun module identifié</span>
+        </div>
+      </div>
+
+      <!-- Risques -->
+      <div class="section">
+        <h3>⚠️ Risques Détectés</h3>
+        <ul class="risks-list" id="risksList">
+          <li class="no-data">Aucun risque identifié</li>
+        </ul>
+      </div>
+
+      <!-- Résumé IA -->
+      <div class="section">
+        <h3>🤖 Résumé IA</h3>
+        <div class="summary" id="summary">
+          <p class="no-data">Résumé non disponible</p>
+        </div>
+      </div>
+
+      <!-- Metadata -->
+      <div class="metadata">
+        <div class="metadata-item">
+          <span class="label">Priorité:</span>
+          <span class="value" id="priority">—</span>
+        </div>
+        <div class="metadata-item">
+          <span class="label">Statut:</span>
+          <span class="value" id="status-value">—</span>
+        </div>
+        <div class="metadata-item">
+          <span class="label">Âge:</span>
+          <span class="value" id="age">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

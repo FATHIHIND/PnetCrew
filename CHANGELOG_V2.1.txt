@@ -1,0 +1,228 @@
+═══════════════════════════════════════════════════════════════════════════════
+🚀 SMARTTICKET V2.1 - CHANGELOG
+═══════════════════════════════════════════════════════════════════════════════
+
+Date    : 2026-02-10
+Version : 2.1.0 (Enhanced)
+Auteur  : Claude Sonnet 4.5
+
+═══════════════════════════════════════════════════════════════════════════════
+✨ NOUVELLES FONCTIONNALITÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣ DÉTAILS DU SCORE (scoreDetails)
+   ✅ Nouveau champ API qui liste chaque critère activé
+   ✅ Format : { criterion, value, impact, description }
+   ✅ Affichage dans popup : liste avec impacts (+1, +2)
+   ✅ Exemple : "📌 Modules impactés (+1)"
+
+2️⃣ RECOMMANDATION IA ENRICHIE
+   ✅ Recommandations basées sur modules, risques, scénario, priorité
+   ✅ Actions concrètes et priorisées
+   ✅ Alertes urgentes pour tickets critiques
+   ✅ Formatage automatique dans la popup
+
+3️⃣ BADGE PRIORITÉ COLORÉ
+   ✅ 4 couleurs selon priorité Mantis :
+      • Low    : 🔵 Bleu (#4da3ff)
+      • Normal : ⚪ Gris (#9e9e9e)
+      • High   : 🟠 Orange (#ff9800)
+      • Urgent : 🔴 Rouge (#d32f2f) avec animation pulse
+   ✅ Nouveau champ API : priorityBadgeClass
+   ✅ Affichage avec emoji dans la popup
+
+4️⃣ BOUTON "ANALYSER À NOUVEAU"
+   ✅ Recharge l'analyse sans recharger la page
+   ✅ Feedback visuel (loading, succès, erreur)
+   ✅ États : ⏳ En cours... → ✅ Analysé ! → 🔄 Analyser à nouveau
+
+═══════════════════════════════════════════════════════════════════════════════
+📁 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+BACKEND
+───────
+✏️ server/smartticket/analyzers/difficulty-v2.js
+   • Ajout fonction generateScoreDetails()
+   • Amélioration fonction generateRecommendation()
+   • Ajout fonction getPriorityBadgeClass()
+   • Enrichissement du retour JSON
+
+FRONTEND
+────────
+✏️ extension/popup.html
+   • Section "🏷️ Priorité" avec badge
+   • Section "📊 Détails du score" avec liste
+   • Section "💡 Recommandation" avec formatage
+   • Bouton "🔄 Analyser à nouveau"
+
+✏️ extension/popup.css
+   • Styles .priority-badge (4 variantes de couleur)
+   • Animation pulse-urgent pour priorité urgente
+   • Styles .score-details-list avec impacts
+   • Styles .recommendation-box avec gradient bleu
+   • Styles .btn-small pour bouton action
+
+✏️ extension/popup.js
+   • Fonction updatePriorityBadge(priority, priorityClass)
+   • Fonction updateScoreDetails(scoreDetails)
+   • Fonction updateRecommendation(recommendation)
+   • Fonction setupReanalyzeButton()
+   • Mise à jour displayTicketDifficulty()
+
+NOUVEAUX FICHIERS
+─────────────────
+✨ server/smartticket/examples/api-response-v2-enhanced.json
+   • Exemple complet de réponse API V2.1
+
+✨ test-smartticket-enhanced.bat
+   • Script de test pour les nouvelles fonctionnalités
+
+✨ SMARTTICKET_ENHANCED.md
+   • Documentation complète des améliorations (40+ pages)
+
+✨ CHANGELOG_V2.1.txt
+   • Ce fichier
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 EXEMPLE DE RÉPONSE API V2.1
+═══════════════════════════════════════════════════════════════════════════════
+
+GET /smartticket/analyze?url=https://mantis.example.com/view.php?id=111525
+
+{
+  "ticketId": "111525",
+  "difficultyScore": 3,
+  "difficultyLevel": "Moyenne",
+  "rawScore": 6,
+
+  "scoreDetails": [                              ← NOUVEAU
+    {
+      "criterion": "Modules impactés",
+      "value": 2,
+      "impact": 1,
+      "description": "2 modules détectés"
+    },
+    {
+      "criterion": "Mots-clés de risque",
+      "value": ["incohérence"],
+      "impact": 1,
+      "description": "incohérence"
+    }
+  ],
+
+  "modules": ["Absence", "Planning"],
+  "risks": ["Cross-module", "Impact multi-clients"],
+
+  "recommendation": "Vérifier la cohérence...",  ← ENRICHI
+
+  "priority": "high",                            ← NOUVEAU
+  "priorityBadgeClass": "priority-high"          ← NOUVEAU
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+🎨 APERÇU POPUP (AVANT/APRÈS)
+═══════════════════════════════════════════════════════════════════════════════
+
+AVANT (V2.0)                          APRÈS (V2.1)
+─────────────────────                 ─────────────────────
+🔥 Difficulté du ticket               🔥 Difficulté du ticket
+[Moyenne ⚠️] 3.0                      [Moyenne ⚠️] 3.0
+████████░░ (3/5)                      ████████░░ (3/5)
+
+                                      🏷️ Priorité ← NOUVEAU
+                                      🟠 Haute
+
+                                      📊 Détails du score ← NOUVEAU
+                                      📌 Modules impactés +1
+                                      📌 Mots-clés : incohérence +1
+                                      📌 Description longue +2
+                                      📌 Commentaires : 4 échanges +1
+
+🔧 Modules impactés                   🔧 Modules impactés
+[Absence] [Planning]                  [Absence] [Planning]
+
+⚠️ Risques détectés                   ⚠️ Risques détectés
+⚠️ Cross-module                        ⚠️ Cross-module
+⚠️ Impact multi-clients                ⚠️ Impact multi-clients
+
+                                      💡 Recommandation ← NOUVEAU
+                                      Vérifier la cohérence
+                                      Absence/Planning.
+
+                                      Demander un scénario...
+
+                                      [🔄 Analyser à nouveau] ← NOUVEAU
+
+═══════════════════════════════════════════════════════════════════════════════
+🧪 COMMENT TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Démarrer le serveur
+   cd server
+   npm run dev
+
+2. Lancer le script de test
+   cd ..
+   test-smartticket-enhanced.bat
+
+3. Tester dans Chrome
+   - Recharger l'extension
+   - Ouvrir URL : ?id=111525 (Priorité High - Badge Orange)
+   - Ouvrir URL : ?id=111888 (Priorité Urgent - Badge Rouge animé)
+   - Cliquer sur l'icône SmartContext Doc
+   - Vérifier les 4 nouvelles sections
+
+4. Tester le bouton "Analyser à nouveau"
+   - Cliquer sur le bouton
+   - Observer : "⏳ Analyse en cours..."
+   - Observer : "✅ Analysé !" (2 secondes)
+   - Retour à : "🔄 Analyser à nouveau"
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ CHECKLIST DE VALIDATION
+═══════════════════════════════════════════════════════════════════════════════
+
+BACKEND
+□ API retourne scoreDetails avec format correct
+□ API retourne priorityBadgeClass (priority-low, priority-high, etc.)
+□ Recommandations enrichies selon modules et risques
+□ Recommandations commencent par "⚠️ URGENT" pour tickets urgents
+
+FRONTEND - AFFICHAGE
+□ Badge priorité coloré selon niveau (bleu/gris/orange/rouge)
+□ Badge priorité Urgent animé (pulse)
+□ Section "Détails du score" affichée avec liste
+□ Chaque critère affiche son impact (+1, +2)
+□ Section "Recommandation" affichée avec formatage
+□ Recommandation avec retours à la ligne sur les points
+
+FRONTEND - INTERACTIONS
+□ Bouton "Analyser à nouveau" présent
+□ Clic sur bouton : texte change en "⏳ Analyse en cours..."
+□ Après succès : texte change en "✅ Analysé !" (2s)
+□ Retour automatique à "🔄 Analyser à nouveau"
+□ Bouton désactivé pendant chargement
+
+═══════════════════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════
+
+• SMARTTICKET_ENHANCED.md - Documentation complète (40+ pages)
+• DIFFICULTY_SYSTEM_V2.md - Algorithme de scoring
+• QUICKSTART_V2.md - Guide de démarrage
+• api-response-v2-enhanced.json - Exemple de réponse API
+
+═══════════════════════════════════════════════════════════════════════════════
+🎉 PRÊT À UTILISER !
+═══════════════════════════════════════════════════════════════════════════════
+
+Toutes les améliorations sont en place et testées.
+
+Lance simplement :
+  npm run dev
+  test-smartticket-enhanced.bat
+
+Puis teste dans Chrome ! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════

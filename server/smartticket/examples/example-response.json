@@ -1,0 +1,51 @@
+{
+  "status": "success",
+  "ticketId": "12345",
+  "source": "mantis",
+  "title": "Incohérence calcul absence multi-contrats",
+  "difficultyScore": 4.5,
+  "difficultyLevel": "critical",
+  "riskLevel": "high",
+  "functionalArea": "Absence",
+  "missingInformation": [
+    "Scénario de reproduction non fourni",
+    "Aucune capture d'écran fournie"
+  ],
+  "risks": [
+    "Risque d'intégrité des données",
+    "Plusieurs clients affectés"
+  ],
+  "expertsNeeded": [
+    "paie_expert",
+    "planning_expert"
+  ],
+  "dependencies": [
+    {
+      "type": "multi_module",
+      "modules": [
+        "absence",
+        "paie"
+      ],
+      "description": "Interaction entre absence, paie",
+      "impact": "high"
+    }
+  ],
+  "suggestedAction": "URGENT: Demander au client scénario de reproduction non fourni et contacter l'expert paie_expert",
+  "summary": "Ticket #12345 (mantis) - Priorité urgent\nLe calcul des absences ne fonctionne pas correctement pour les salariés ayant plusieurs contrats simultanés. Contexte : - Client : ABC Corp - Module : Absence & Planning...\n\nPoints clés:\n1. [Absence] Incohérence calcul absence multi-contrats\n2. Complexité critical (score 4.5/5)\n3. Risques : Risque d'intégrité des données\n4. Experts requis : paie_expert, planning_expert\n5. Info manquante : Scénario de reproduction non fourni, Aucune capture d'écran fournie\n\nStatut: assigned | Assigné: Support L2",
+  "keyPoints": [
+    "[Absence] Incohérence calcul absence multi-contrats",
+    "Complexité critical (score 4.5/5)",
+    "Risques : Risque d'intégrité des données",
+    "Experts requis : paie_expert, planning_expert",
+    "Info manquante : Scénario de reproduction non fourni, Aucune capture d'écran fournie"
+  ],
+  "metadata": {
+    "priority": "urgent",
+    "status": "assigned",
+    "created_at": "2026-02-05T10:00:00.000Z",
+    "updated_at": "2026-02-10T14:30:00.000Z",
+    "comments_count": 3,
+    "age_days": 5
+  },
+  "analyzed_at": "2026-02-10T15:00:00.000Z"
+}

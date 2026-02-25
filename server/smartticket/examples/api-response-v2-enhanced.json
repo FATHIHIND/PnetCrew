@@ -1,0 +1,104 @@
+{
+  "description": "Exemple de réponse API SmartTicket V2 Enhanced avec toutes les nouvelles fonctionnalités",
+  "version": "2.1.0",
+  "example": {
+    "ticketId": "111525",
+    "difficultyScore": 3,
+    "difficultyLevel": "Moyenne",
+    "rawScore": 6,
+    "criteria": {
+      "modules": 2,
+      "riskWords": ["incohérence"],
+      "missingScenario": false,
+      "descriptionSize": 1300,
+      "commentsCount": 4,
+      "reopened": 0,
+      "priority": "high"
+    },
+    "scoreDetails": [
+      {
+        "criterion": "Modules impactés",
+        "value": 2,
+        "impact": 1,
+        "description": "2 modules détectés"
+      },
+      {
+        "criterion": "Mots-clés de risque",
+        "value": ["incohérence"],
+        "impact": 1,
+        "description": "incohérence"
+      },
+      {
+        "criterion": "Description longue",
+        "value": 1300,
+        "impact": 2,
+        "description": "1300 caractères"
+      },
+      {
+        "criterion": "Commentaires multiples",
+        "value": 4,
+        "impact": 1,
+        "description": "4 échanges"
+      },
+      {
+        "criterion": "Priorité haute",
+        "value": "high",
+        "impact": 1,
+        "description": "Traitement rapide souhaité"
+      }
+    ],
+    "modules": ["Absence", "Planning"],
+    "risks": [
+      "Cross-module (2 modules impactés)",
+      "Impact multi-clients"
+    ],
+    "summary": "Ticket #111525 - Difficulté Moyenne (3/5). Complexité Absence & Planning avec interactions entre modules. Risques détectés : incohérence.",
+    "recommendation": "Vérifier la cohérence Absence/Planning. Demander un scénario de reproduction détaillé au client. Tester une paie de contrôle pour valider la cohérence.",
+    "priority": "high",
+    "priorityBadgeClass": "priority-high"
+  },
+  "display_in_popup": {
+    "priority_badge": "🟠 Haute",
+    "priority_class": "priority-high (orange)",
+    "score_details": [
+      "📌 Modules impactés (+1)",
+      "📌 Mots-clés de risque : incohérence (+1)",
+      "📌 Description longue : 1300 caractères (+2)",
+      "📌 Commentaires multiples : 4 échanges (+1)",
+      "📌 Priorité haute (+1)"
+    ],
+    "recommendation_formatted": "Vérifier la cohérence Absence/Planning.\n\nDemander un scénario de reproduction détaillé au client.\n\nTester une paie de contrôle pour valider la cohérence."
+  },
+  "priority_colors": {
+    "low": {
+      "emoji": "🔵",
+      "text": "Faible",
+      "color": "#4da3ff",
+      "css_class": "priority-low"
+    },
+    "normal": {
+      "emoji": "⚪",
+      "text": "Normale",
+      "color": "#9e9e9e",
+      "css_class": "priority-normal"
+    },
+    "high": {
+      "emoji": "🟠",
+      "text": "Haute",
+      "color": "#ff9800",
+      "css_class": "priority-high"
+    },
+    "urgent": {
+      "emoji": "🔴",
+      "text": "Urgente",
+      "color": "#d32f2f",
+      "css_class": "priority-urgent"
+    }
+  },
+  "notes": {
+    "scoreDetails": "Nouveau tableau détaillant chaque critère activé avec son impact sur le score brut",
+    "recommendation": "Recommandations enrichies basées sur modules, risques, scénario et priorité",
+    "priorityBadgeClass": "Classe CSS pour colorer le badge de priorité dans la popup",
+    "reanalyze_button": "Bouton permettant de recharger l'analyse sans recharger la page"
+  }
+}

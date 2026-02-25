@@ -1,0 +1,165 @@
+{
+  "description": "Exemple complet de réponse avec tickets similaires et explications intelligentes",
+  "endpoint": "GET /smartticket/full-analysis?url=https://mantis.example.com/view.php?id=TEST-002",
+  "version": "3.1.0",
+
+  "example_with_similarity_explanations": {
+    "ticketId": "TEST-002",
+    "timestamp": "2026-02-10T14:30:00.000Z",
+    "status": "incomplete",
+
+    "completeness": {
+      "completenessScore": 65,
+      "level": "Incomplete",
+      "decision": "Accepted-Incomplete",
+      "message": "🟠 Ticket transmis, mais il manque des éléments tels qu'une capture d'écran ou l'environnement. Cela aiderait le support.",
+      "missingElements": [
+        "Environnement",
+        "Preuve (capture d'écran)"
+      ],
+      "detectedElements": [
+        "Description claire",
+        "Comportement attendu"
+      ]
+    },
+
+    "summary": "**Ticket #TEST-002** : Erreur calcul absence multi-contrats\n**Module** : Absence\n**Problème** : Le calcul des absences ne fonctionne pas correctement pour les salariés ayant plusieurs contrats simultanés.\n**Impact** : Important - Traitement rapide souhaité\n**Contexte** : 1 échange(s), Ouvert depuis 2 jours",
+
+    "difficulty": {
+      "difficultyScore": 3,
+      "difficultyLevel": "Moyenne",
+      "risks": [
+        "Cross-module (2 modules impactés)",
+        "Impact multi-clients"
+      ],
+      "modules": [
+        "Absence",
+        "Planning"
+      ],
+      "scoreDetails": [
+        {
+          "criterion": "Modules impactés",
+          "value": 2,
+          "impact": 1,
+          "description": "2 modules détectés"
+        },
+        {
+          "criterion": "Description longue",
+          "value": 450,
+          "impact": 2,
+          "description": "450 caractères"
+        },
+        {
+          "criterion": "Priorité haute",
+          "value": "high",
+          "impact": 1,
+          "description": "Traitement rapide souhaité"
+        }
+      ],
+      "recommendation": "Demander un scénario de reproduction détaillé au client. Vérifier la cohérence Absence/Planning. Tester une paie de contrôle pour valider la cohérence."
+    },
+
+    "similarTickets": [
+      {
+        "id": "111525",
+        "title": "Incohérence calcul absence multi-contrats",
+        "category": "Absence",
+        "similarity": 0.92,
+        "explanation": [
+          "Modules communs : Absence, Contrat",
+          "Termes communs : 'absence', 'multi-contrats', 'calcul'",
+          "Catégorie identique : Absence",
+          "Anomalies similaires : incohérence, calcul incorrect",
+          "Problème fonctionnel comparable : Gestion multi-contrats"
+        ],
+        "explanationText": "Modules communs : Absence, Contrat • Termes communs : 'absence', 'multi-contrats', 'calcul' • Catégorie identique : Absence • Anomalies similaires : incohérence, calcul incorrect • Problème fonctionnel comparable : Gestion multi-contrats"
+      },
+      {
+        "id": "112020",
+        "title": "Incohérence calcul absence pour multi-contrats",
+        "category": "Absence",
+        "similarity": 0.88,
+        "explanation": [
+          "Modules communs : Absence, Contrat",
+          "Termes communs : 'absence', 'multi-contrats', 'calcul'",
+          "Catégorie identique : Absence",
+          "Anomalies similaires : incohérence, double comptabilisation"
+        ],
+        "explanationText": "Modules communs : Absence, Contrat • Termes communs : 'absence', 'multi-contrats', 'calcul' • Catégorie identique : Absence • Anomalies similaires : incohérence, double comptabilisation"
+      },
+      {
+        "id": "110452",
+        "title": "Erreur calcul planning après modification absence",
+        "category": "Planning",
+        "similarity": 0.67,
+        "explanation": [
+          "Modules communs : Planning, Absence",
+          "Termes communs : 'planning', 'absence', 'calcul'",
+          "Problème fonctionnel comparable : Recalcul Absence/Planning"
+        ],
+        "explanationText": "Modules communs : Planning, Absence • Termes communs : 'planning', 'absence', 'calcul' • Problème fonctionnel comparable : Recalcul Absence/Planning"
+      }
+    ],
+
+    "pipeline": {
+      "step1_completeness": "✅ Score: 65/100 (Accepted-Incomplete)",
+      "step2_summary": "✅ Résumé généré (5 lignes)",
+      "step3_difficulty": "✅ Score: 3/5 (Moyenne)",
+      "step4_similarity": "✅ 3 tickets similaires trouvés avec explications"
+    }
+  },
+
+  "fetch_ticket_response_example": {
+    "description": "Exemple de réponse de GET /smartticket/fetch-ticket?id=111525",
+    "id": "111525",
+    "title": "Incohérence calcul absence multi-contrats",
+    "description": "Le calcul des absences ne fonctionne pas correctement pour les salariés ayant plusieurs contrats simultanés.",
+    "summary": "Calcul incorrect des absences en cas de multi-contrats",
+    "category": "Absence",
+    "modules": [
+      "Absence",
+      "Contrat",
+      "Planning"
+    ],
+    "keywords": [
+      "absence",
+      "multi-contrats",
+      "incohérence",
+      "calcul"
+    ],
+    "riskWords": [
+      "incohérence",
+      "calcul incorrect",
+      "multi-contrats"
+    ]
+  },
+
+  "explain_similarity_response_example": {
+    "description": "Exemple de réponse de explainSimilarity(baseTicket, similarTicket)",
+    "reasons": [
+      "Modules communs : Absence, Contrat",
+      "Termes communs : 'absence', 'multi-contrats', 'calcul'",
+      "Catégorie identique : Absence",
+      "Anomalies similaires : incohérence, calcul incorrect",
+      "Problème fonctionnel comparable : Gestion multi-contrats"
+    ],
+    "text": "Modules communs : Absence, Contrat • Termes communs : 'absence', 'multi-contrats', 'calcul' • Catégorie identique : Absence • Anomalies similaires : incohérence, calcul incorrect • Problème fonctionnel comparable : Gestion multi-contrats"
+  },
+
+  "notes": {
+    "automatic_flow": "Le flow est 100% automatique : findSimilarTickets() inclut déjà les explications via explainSimilarity(), pas besoin de fetch supplémentaire côté frontend",
+    "mantis_url_format": "https://mantis-pd.cegid.fr/mantis-client/view.php?id={ticketId}",
+    "similarity_thresholds": {
+      "high": ">= 0.7 (Badge rouge 🔴)",
+      "medium": ">= 0.5 (Badge orange 🟠)",
+      "low": "< 0.5 (Badge bleu 🔵)"
+    },
+    "explanation_components": [
+      "Modules communs (Paie, Absence, Planning...)",
+      "Termes communs (mots-clés extraits)",
+      "Catégorie identique",
+      "Anomalies similaires (risk words)",
+      "Problème fonctionnel comparable (patterns)"
+    ]
+  }
+}

@@ -1,0 +1,448 @@
+{
+  "name": "SmartContext Doc - Workflow Complet v3.0 (SmartTicket Pipeline)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger-1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "notes": "Déclenche manuellement le workflow pour test"
+    },
+    {
+      "parameters": {
+        "path": "smartcontext/upload",
+        "method": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-upload",
+      "name": "Webhook - Upload Doc",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 500],
+      "webhookId": "smartcontext-upload",
+      "notes": "Endpoint POST pour uploader un document et ses métadonnées"
+    },
+    {
+      "parameters": {
+        "path": "smartcontext/auto-summarize",
+        "method": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-auto-summarize",
+      "name": "Webhook - Auto Summarize",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 800],
+      "webhookId": "smartcontext-auto-summarize",
+      "notes": "Endpoint POST pour générer un résumé automatique pour n'importe quelle URL"
+    },
+    {
+      "parameters": {
+        "path": "smartcontext/smartticket/analyze",
+        "method": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-smartticket",
+      "name": "Webhook - SmartTicket Analysis",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 1100],
+      "webhookId": "smartcontext-smartticket",
+      "notes": "Endpoint POST pour analyser un ticket avec le pipeline V3.0 complet (complétude, résumé, difficulté, similarité)"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Normaliser les métadonnées du document\nconst items = $input.all();\n\nconst normalized = items.map(item => {\n  const data = item.json;\n  \n  return {\n    json: {\n      key: data.key || data.doc_key || 'unknown',\n      title: data.title || 'Documentation sans titre',\n      urlMatch: Array.isArray(data.urlMatch) \n        ? data.urlMatch \n        : (data.urlMatch ? [data.urlMatch] : []),\n      docUrlOrPath: data.docUrlOrPath || data.path || data.url || '',\n      tags: data.tags || [],\n      timestamp: new Date().toISOString(),\n      source: 'n8n-upload'\n    },\n    binary: item.binary\n  };\n});\n\nreturn normalized;"
+      },
+      "id": "function-normalize",
+      "name": "Normalize Metadata",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 400],
+      "notes": "Normalise les métadonnées (key, title, urlMatch, path)"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Préparer les données pour auto-summarize\nconst items = $input.all();\n\nconst prepared = items.map(item => {\n  const data = item.json;\n  \n  return {\n    json: {\n      url: data.url || 'https://example.com',\n      text: data.text || data.content || '',\n      html: data.html || '',\n      timestamp: new Date().toISOString(),\n      source: 'n8n-auto-summarize'\n    }\n  };\n});\n\nreturn prepared;"
+      },
+      "id": "function-prepare-auto",
+      "name": "Prepare Auto Summarize",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 800],
+      "notes": "Prépare les données pour l'endpoint auto-summarize"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Préparer les données pour SmartTicket analysis\nconst items = $input.all();\n\nconst prepared = items.map(item => {\n  const data = item.json;\n  \n  return {\n    json: {\n      url: data.url || '',\n      ticketId: data.ticketId || data.id || '',\n      source: data.source || 'mantis',\n      timestamp: new Date().toISOString(),\n      workflow_source: 'n8n-smartticket'\n    }\n  };\n});\n\nreturn prepared;"
+      },
+      "id": "function-prepare-smartticket",
+      "name": "Prepare SmartTicket Analysis",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 1100],
+      "notes": "Prépare les données pour l'analyse SmartTicket (pipeline V3.0)"
+    },
+    {
+      "parameters": {
+        "url": "=http://localhost:8787/ingest",
+        "method": "POST",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "http-ingest",
+      "name": "HTTP - Update Mapping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300],
+      "notes": "POST vers /ingest pour mettre à jour le mapping côté serveur"
+    },
+    {
+      "parameters": {
+        "url": "=http://localhost:8787/summarize",
+        "method": "POST",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ key: $json.key, docUrlOrPath: $json.docUrlOrPath }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "http-summarize",
+      "name": "HTTP - Generate AI Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 500],
+      "notes": "POST vers /summarize pour générer le résumé IA via Azure OpenAI"
+    },
+    {
+      "parameters": {
+        "url": "=http://localhost:8787/auto-summarize",
+        "method": "POST",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "http-auto-summarize",
+      "name": "HTTP - Auto Summarize",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 800],
+      "notes": "POST vers /auto-summarize pour générer un résumé automatique pour n'importe quelle page"
+    },
+    {
+      "parameters": {
+        "url": "=http://localhost:8787/smartticket/full-analysis?url={{ encodeURIComponent($json.url) }}",
+        "method": "GET",
+        "options": {
+          "timeout": 90000
+        }
+      },
+      "id": "http-smartticket",
+      "name": "HTTP - SmartTicket Full Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 1100],
+      "notes": "GET vers /smartticket/full-analysis pour exécuter le pipeline complet V3.0 (4 étapes: complétude, résumé, difficulté, similarité)"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Construire la réponse finale pour upload workflow\nconst items = $input.all();\n\nconst ingestResult = items[0]?.json || {};\nconst summaryResult = items[1]?.json || {};\n\nreturn [{\n  json: {\n    status: 'success',\n    workflow: 'upload',\n    key: ingestResult.key,\n    title: ingestResult.title,\n    mapping_updated: !!ingestResult.status,\n    summary_generated: !!summaryResult.status,\n    summary_excerpt: summaryResult.summary \n      ? summaryResult.summary.substring(0, 150) + '...'\n      : 'Non disponible',\n    endpoints_called: ['/ingest', '/summarize'],\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "function-response-upload",
+      "name": "Build Upload Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 400],
+      "notes": "Construit la réponse JSON finale pour upload"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Construire la réponse finale pour auto-summarize (V3.0 - sans common_errors/faqs)\nconst items = $input.all();\n\nconst result = items[0]?.json || {};\n\nreturn [{\n  json: {\n    status: 'success',\n    workflow: 'auto-summarize',\n    url: result.url,\n    summary_generated: !!result.summary,\n    summary: result.summary || '',\n    checklist: result.checklist || [],\n    generated_at: result.generated_at || new Date().toISOString(),\n    source: result.source || 'auto-summary',\n    is_temporary: result.is_temporary !== undefined ? result.is_temporary : true,\n    endpoint_called: '/auto-summarize',\n    timestamp: new Date().toISOString(),\n    note: 'V3.0: common_errors et faqs supprimés'\n  }\n}];"
+      },
+      "id": "function-response-auto",
+      "name": "Build Auto Summary Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 800],
+      "notes": "Construit la réponse JSON finale pour auto-summarize (V3.0)"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Construire la réponse finale pour SmartTicket analysis (Pipeline V3.0)\nconst items = $input.all();\n\nconst result = items[0]?.json || {};\n\nreturn [{\n  json: {\n    status: result.status || 'unknown',\n    workflow: 'smartticket-analysis',\n    pipeline_version: '3.0',\n    \n    // Étape 1: Complétude (barrière)\n    completeness: result.completeness || null,\n    completeness_score: result.completeness?.score || 0,\n    completeness_status: result.completeness?.status || 'unknown',\n    ticket_rejected: result.status === 'rejected',\n    \n    // Étape 2: Résumé (si accepté)\n    summary: result.summary || null,\n    checklist: result.checklist || [],\n    \n    // Étape 3: Difficulté (si accepté)\n    difficulty: result.difficulty || null,\n    difficulty_level: result.difficulty?.level || 'unknown',\n    difficulty_score: result.difficulty?.score || 0,\n    \n    // Étape 4: Tickets similaires (si accepté)\n    similar_tickets: result.similar_tickets || [],\n    similar_count: result.similar_tickets?.length || 0,\n    \n    // Métadonnées\n    ticket_id: result.ticket_id || result.ticketId || '',\n    ticket_title: result.ticket_title || result.title || '',\n    endpoint_called: '/smartticket/full-analysis',\n    timestamp: new Date().toISOString(),\n    note: 'Pipeline V3.0 avec 4 étapes séquentielles'\n  }\n}];"
+      },
+      "id": "function-response-smartticket",
+      "name": "Build SmartTicket Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 1100],
+      "notes": "Construit la réponse finale pour SmartTicket analysis (Pipeline V3.0)"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json, null, 2) }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-upload",
+      "name": "Respond Upload",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 400],
+      "notes": "Renvoie la réponse JSON pour upload workflow"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json, null, 2) }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-auto",
+      "name": "Respond Auto Summary",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 800],
+      "notes": "Renvoie la réponse JSON pour auto-summarize workflow"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json, null, 2) }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-smartticket",
+      "name": "Respond SmartTicket",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 1100],
+      "notes": "Renvoie la réponse JSON pour SmartTicket analysis workflow"
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Upload Doc": {
+      "main": [
+        [
+          {
+            "node": "Normalize Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Auto Summarize": {
+      "main": [
+        [
+          {
+            "node": "Prepare Auto Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - SmartTicket Analysis": {
+      "main": [
+        [
+          {
+            "node": "Prepare SmartTicket Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Metadata": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Update Mapping",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP - Generate AI Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Auto Summarize": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Auto Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare SmartTicket Analysis": {
+      "main": [
+        [
+          {
+            "node": "HTTP - SmartTicket Full Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Update Mapping": {
+      "main": [
+        [
+          {
+            "node": "Build Upload Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Generate AI Summary": {
+      "main": [
+        [
+          {
+            "node": "Build Upload Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Auto Summarize": {
+      "main": [
+        [
+          {
+            "node": "Build Auto Summary Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - SmartTicket Full Analysis": {
+      "main": [
+        [
+          {
+            "node": "Build SmartTicket Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Upload Response": {
+      "main": [
+        [
+          {
+            "node": "Respond Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Auto Summary Response": {
+      "main": [
+        [
+          {
+            "node": "Respond Auto Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build SmartTicket Response": {
+      "main": [
+        [
+          {
+            "node": "Respond SmartTicket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2026-02-10T00:00:00.000Z",
+      "updatedAt": "2026-02-10T00:00:00.000Z",
+      "id": "1",
+      "name": "smartcontext-v3"
+    }
+  ],
+  "meta": {
+    "instanceId": "local",
+    "version": "3.0.0",
+    "description": "Workflow n8n V3.0 pour SmartContext Doc avec pipeline SmartTicket complet (complétude, résumé, difficulté, similarité). Sections FAQ et erreurs fréquentes supprimées."
+  },
+  "pinData": {},
+  "versionId": "3",
+  "triggerCount": 0,
+  "active": false
+}

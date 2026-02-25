@@ -1,0 +1,42 @@
+[
+  {
+    "key": "jira",
+    "match": ["jira", "atlassian.net"],
+    "title": "Guide Jira",
+    "path": "docs/jira_guide.pdf",
+    "tags": ["process", "workflow", "tickets"],
+    "updated_at": "2026-02-05T00:00:00.000Z"
+  },
+  {
+    "key": "teams",
+    "match": ["teams.microsoft.com", "teams"],
+    "title": "Bonnes pratiques Teams",
+    "path": "docs/teams_best_practices.pdf",
+    "tags": ["communication", "meeting"],
+    "updated_at": "2026-02-05T00:00:00.000Z"
+  },
+  {
+    "key": "github",
+    "match": ["github.com", "pull", "issues"],
+    "title": "Cheatsheet GitHub",
+    "path": "docs/github_cheatsheet.pdf",
+    "tags": ["git", "code review"],
+    "updated_at": "2026-02-05T00:00:00.000Z"
+  },
+  {
+    "key": "azdo",
+    "match": ["dev.azure.com", "visualstudio.com"],
+    "title": "Guide Azure DevOps",
+    "path": "docs/azdo_quickstart.pdf",
+    "tags": ["devops", "pipeline", "ci/cd"],
+    "updated_at": "2026-02-05T00:00:00.000Z"
+  },
+  {
+    "key": "confluence",
+    "match": ["confluence", "atlassian.net/wiki"],
+    "title": "Guide Confluence",
+    "path": "docs/confluence_guide.pdf",
+    "tags": ["documentation", "wiki", "collaboration"],
+    "updated_at": "2026-02-05T00:00:00.000Z"
+  }
+]
